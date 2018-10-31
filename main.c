@@ -2,6 +2,7 @@
 
 #define WNCK_WINDOW_CHANGE_EVERYTHING (WNCK_WINDOW_CHANGE_X | WNCK_WINDOW_CHANGE_Y | WNCK_WINDOW_CHANGE_WIDTH | WNCK_WINDOW_CHANGE_HEIGHT)
 
+#include "keybinds.c"
 
 void move_active_window(WnckScreen* screen) {
   WnckWindow *active_window;
@@ -38,6 +39,8 @@ int main (int argc, char **argv)
       g_print ("%s%s\n", wnck_window_get_name(window),
               /*window == active_window false ? " (active)" :*/ "");
     }
+  g_print("%s", "waiting for strg shift y");
+  init_keys();
 
   return 0;
 }
