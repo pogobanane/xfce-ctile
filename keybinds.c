@@ -35,14 +35,16 @@ struct XHandle xhandle_init_hotkeys() {
 }
 
 void xhandle_wait_event(struct XHandle handle) {
-  XNextEvent(handle.dpy, &(handle.ev));
-  switch(handle.ev.type)
-  {
-      case KeyPress:
-          printf("%s", "Hot key pressed!\n");
-
-      default:
-          break;
+  while (true) {
+    XNextEvent(handle.dpy, &(handle.ev));
+    switch(handle.ev.type)
+    {
+        case KeyPress:
+            printf("%s", "Hot key pressed!\n");
+            return;
+        default:
+            break;
+    }
   }
 }
 
