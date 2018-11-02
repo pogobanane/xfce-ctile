@@ -24,7 +24,7 @@ void move_active_window(WnckScreen* screen) {
   g_print("%i, %i, %i, %i\n", xp, yp, widthp, heightp);
 
   wnck_window_set_geometry(active_window, WNCK_WINDOW_GRAVITY_SOUTH, WNCK_WINDOW_CHANGE_EVERYTHING, xp, yp+50, widthp, heightp);
-  sleep(1);
+  //sleep(1);
   wnck_screen_force_update(screen);
   active_window = wnck_screen_get_active_window(screen);
   xp = 0; yp = 0; widthp = 0; heightp = 0;
@@ -36,6 +36,9 @@ void move_active_window(WnckScreen* screen) {
 
 int main (int argc, char **argv)
 {
+  struct XHandle handle = xhandle_init_hotkeys();
+  while(true) {
+    xhandle_wait_event(handle);
   WnckScreen *screen;
 
   gdk_init(&argc, &argv);
@@ -44,12 +47,10 @@ int main (int argc, char **argv)
 
   wnck_screen_force_update(screen);
 
-  struct XHandle handle = xhandle_init_hotkeys();
-  while(true) {
-    xhandle_wait_event(handle);
     move_active_window(screen);
-  }
-  g_print("%s", "waiting for strg shift y");
 
+  g_print("%s", "waiting for strg shift y");
+  wnck_shutdown();
+  }
   return 0;
 }
