@@ -63,14 +63,14 @@ int main (int argc, char **argv)
   struct XHandle handle = xhandle_init_hotkeys();
 
   while(true) {
+    g_print("%s\n", "waiting for strg shift y");
     xhandle_wait_event(handle);
     //move_active_window(argc, argv);
     WnckScreen* screen = open_wnck(argc, argv);
     struct WinState win_state = tiling_init();
     tile_right(win_state, screen);
+    compute_usable(screen);
     close_wnck();
-    compute_usable();
-    g_print("%s\n", "waiting for strg shift y");
   }
 
   return 0;
