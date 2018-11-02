@@ -1,8 +1,14 @@
 #include <libwnck/libwnck.h>
+#include <X11/Xlib.h>
+#include <X11/Xatom.h>
+#include <limits.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 #define WNCK_WINDOW_CHANGE_EVERYTHING (WNCK_WINDOW_CHANGE_X | WNCK_WINDOW_CHANGE_Y | WNCK_WINDOW_CHANGE_WIDTH | WNCK_WINDOW_CHANGE_HEIGHT)
 
 #include "keybinds.c"
+#include "tiling.c"
 
 void print_windows(WnckScreen* screen) {
   WnckWindow* active_window;
@@ -17,12 +23,16 @@ void print_windows(WnckScreen* screen) {
     }
 }
 
-struct WnckScreen *open_wnck(int argc, char **argv) {
+/* returns WnckScreen*
+*/
+void *open_wnck(int argc, char **argv) {
   WnckScreen* screen;
 
   gdk_init(&argc, &argv);
   screen = wnck_screen_get_default();
   wnck_screen_force_update(screen);
+
+  return screen;
 }
 
 void close_wnck() {
@@ -34,7 +44,7 @@ void move_active_window(int argc, char **argv) {
   WnckWindow *active_window;
 
   screen = open_wnck(argc, argv);
-  
+
   active_window = wnck_screen_get_active_window(screen);
   g_print ("%s\n", wnck_window_get_name(active_window));
 
@@ -54,8 +64,12 @@ int main (int argc, char **argv)
 
   while(true) {
     xhandle_wait_event(handle);
-    move_active_window(argc, argv);
-
+    //move_active_window(argc, argv);
+    WnckScreen* screen = open_wnck(argc, argv);
+    struct WinState win_state = tiling_init();
+    tile_right(win_state, screen);
+    close_wnck();
+    compute_usable();
     g_print("%s\n", "waiting for strg shift y");
   }
 
