@@ -7,6 +7,7 @@
 
 #define WNCK_WINDOW_CHANGE_EVERYTHING (WNCK_WINDOW_CHANGE_X | WNCK_WINDOW_CHANGE_Y | WNCK_WINDOW_CHANGE_WIDTH | WNCK_WINDOW_CHANGE_HEIGHT)
 
+#include "winstate.h"
 #include "keybinds.c"
 #include "tiling.c"
 
@@ -68,6 +69,7 @@ int main (int argc, char **argv)
     //move_active_window(argc, argv);
     WnckScreen* screen = open_wnck(argc, argv);
     struct WinState win_state = tiling_init();
+    tiling_init();
     tile_right(win_state, screen);
     compute_usable(screen);
     close_wnck();

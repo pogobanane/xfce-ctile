@@ -1,36 +1,4 @@
-struct Rect {
-  int xp, yp, widthp, heightp;
-};
 
-struct Rect Rect_init() {
-  struct Rect ret;
-  ret.xp = 0;
-  ret.yp = 0;
-  ret.widthp = 0;
-  ret.heightp = 0;
-}
-
-struct WinState {
-  int columns, rows;
-  struct Rect initial_geometry;
-  /*
-  (x_state, y_state) represents the coordinates in this
-  matrix:
-  smarttiles = [
-        ['top-left', 'top', 'top-right'],
-        ['left', 'reset', 'right'],
-        ['bottom-left', 'bottom', 'bottom-right']
-    ]
-  */
-  int x_state, y_state;
-};
-
-struct WinState tiling_init() {
-  struct WinState state;
-  state.columns = 3;
-  state.rows = 2;
-  return state;
-}
 
 void tile_right(struct WinState state, WnckScreen* screen) {
   WnckWindow* active;
@@ -122,7 +90,9 @@ struct Strut max_strut(Display* display, Window window)
     return ret;
 }
 
-void compute_usable(WnckScreen* screen) {
+/* returns Rect of usable part of screen (which is not used up by taskbars etc.)
+*/
+struct Rect compute_usable(WnckScreen* screen) {
       Display* display = XOpenDisplay(NULL);
       Window window = RootWindow(display, DefaultScreen(display));
       struct Strut strut = max_strut(display, window);
@@ -133,4 +103,5 @@ void compute_usable(WnckScreen* screen) {
       usable.widthp = wnck_screen_get_width(screen) - strut.left - strut.right;
       usable.heightp = wnck_screen_get_height(screen) - strut.top - strut.bot;
       g_print("%i, %i, %i, %i\n", usable.xp, usable.yp, usable.widthp, usable.heightp);
+      return usable;
 }
