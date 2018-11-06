@@ -70,6 +70,16 @@ int main (int argc, char **argv)
     //move_active_window(argc, argv);
     WnckScreen* screen = open_wnck(argc, argv);
     tile_right(&win_state, screen);
+    // tests
+    close_wnck();
+    screen = open_wnck(argc, argv);
+    WnckWindow* active = wnck_screen_get_active_window(screen);
+    struct Rect i;
+    wnck_window_get_geometry(active,
+    &i.xp, &i.yp, &i.widthp,
+    &i.heightp);
+    g_print("window actually is: %i %i %i %i\n", i.xp, i.yp, i.widthp, i.heightp);
+
     compute_usable(screen);
     close_wnck();
   }
