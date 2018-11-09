@@ -1,5 +1,13 @@
 #include <glib.h>
 #include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <libwnck/libwnck.h>
+#include <X11/Xlib.h>
+#include <X11/Xatom.h>
+#include "winstate.h"
+
+#define WNCK_WINDOW_CHANGE_EVERYTHING (WNCK_WINDOW_CHANGE_X | WNCK_WINDOW_CHANGE_Y | WNCK_WINDOW_CHANGE_WIDTH | WNCK_WINDOW_CHANGE_HEIGHT)
 
 struct Strut {
   int top, bot, left, right;
@@ -85,7 +93,7 @@ static struct Strut max_strut(Display* display, Window window)
 
 /* returns Rect of usable part of screen (which is not used up by taskbars etc.)
 */
-struct Rect compute_usable(WnckScreen* screen) {
+static struct Rect compute_usable(WnckScreen* screen) {
       Display* display = XOpenDisplay(NULL);
       Window window = RootWindow(display, DefaultScreen(display));
       struct Strut strut = max_strut(display, window);
