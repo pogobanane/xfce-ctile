@@ -1,7 +1,5 @@
 #include <glib.h>
 #include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
 #include <libwnck/libwnck.h>
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
@@ -108,55 +106,15 @@ static struct Rect compute_usable(WnckScreen* screen) {
 }
 
 void tile_right(struct WinState* state, WnckScreen* screen) {
-  WnckWindow* active;
-  struct Rect geometry;
-  active = wnck_screen_get_active_window(screen);
-  wnck_window_get_geometry(active,
-  &geometry.xp, &geometry.yp, &geometry.widthp,
-  &geometry.heightp);
-
-  //g_print("%i x %i\n", wnck_screen_get_width(screen), wnck_screen_get_height(screen));
-
-  // save user defined "initial" geometry
-  // did ctile move this window already?
-  u_int64_t xid = wnck_window_get_xid(active);
-  gpointer initial_geometry = g_hash_table_lookup(state->initial_geometries, &xid);
-  if(initial_geometry == NULL) {
-    g_print("new window found: xid %i\n", xid);
-    // insert geometry
-    struct Rect* value = malloc(sizeof(struct Rect));
-    memcpy(value, &geometry, sizeof(struct Rect));
-    //u_int64_t* key = malloc(sizeof(u_int64_t));
-    //*key = xid;
-    g_hash_table_insert(state->initial_geometries, &xid, value);
-  } else {
-    struct Rect* ctiled_geometry = (struct Rect*)g_hash_table_lookup(state->ctiled_geometries, &xid);
-    if(ctiled_geometry != NULL) {
-      if(0 != memcmp(ctiled_geometry, &geometry, sizeof(struct Rect))) {
-        // ctiled_geometry != active window's geometry
-        // => geometry has been changed by the user since ctile
-        // changed it last: save user's geometry
-        g_print("ctiled geometry was: %i, %i, %i, %i\n", ctiled_geometry->xp, ctiled_geometry->yp, ctiled_geometry->widthp, ctiled_geometry->heightp);
-        g_print("Detected new user geometry %i, %i, %i, %i\n", geometry.xp, geometry.yp, geometry.widthp, geometry.heightp);
-        struct Rect* value = malloc(sizeof(struct Rect));
-        memcpy(value, &geometry, sizeof(struct Rect));
-        g_hash_table_insert(state->initial_geometries, &xid, value);
-      }
-    }
-  }
-
-  // do things
-  struct Rect* final_tiled_geometry = malloc(sizeof(struct Rect));
+  WnckWindow* active = wnck_screen_get_active_window(screen);
+  struct Rect final_tiled_geometry;
   struct Rect usable = compute_usable(screen);
-  final_tiled_geometry->xp = usable.xp;
-  final_tiled_geometry->yp = usable.yp;
-  final_tiled_geometry->widthp = usable.widthp / 2;
-  final_tiled_geometry->heightp = usable.heightp;
+  final_tiled_geometry.xp = usable.xp;
+  final_tiled_geometry.yp = usable.yp;
+  final_tiled_geometry.widthp = usable.widthp / 2;
+  final_tiled_geometry.heightp = usable.heightp;
   wnck_window_set_geometry(active, WNCK_WINDOW_GRAVITY_SOUTH,
     WNCK_WINDOW_CHANGE_EVERYTHING,
-    final_tiled_geometry->xp, final_tiled_geometry->yp,
-    final_tiled_geometry->widthp, final_tiled_geometry->heightp);
-
-  // add tiled geometry to WinState state
-  g_hash_table_insert(state->ctiled_geometries, &xid, final_tiled_geometry);
+    final_tiled_geometry.xp, final_tiled_geometry.yp,
+    final_tiled_geometry.widthp, final_tiled_geometry.heightp);
 }
