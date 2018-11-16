@@ -31,4 +31,6 @@ struct WinState {
 
 struct Rect Rect_init();
 
+void dump_hash_table(GHashTable* table);
+
 struct WinState tiling_init();

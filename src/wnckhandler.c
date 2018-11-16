@@ -66,14 +66,15 @@ static void save_user_defined_geometry(struct WinState* state, WnckScreen* scree
 static void save_ctile_defined_geometry(struct WinState* state, WnckScreen* screen) {
   WnckWindow* active = wnck_screen_get_active_window(screen);
   u_int64_t xid = wnck_window_get_xid(active);
+  u_int64_t* xidp = malloc(sizeof(u_int64_t));
+  *xidp = xid;
   struct Rect* i = malloc(sizeof(struct Rect));
   wnck_window_get_geometry(active,
   &i->xp, &i->yp, &i->widthp,
   &i->heightp);
   g_print("window actually is: %i %i %i %i\n", i->xp, i->yp, i->widthp, i->heightp);
   // add outcome geometry of tiling to WinState state
-  g_hash_table_insert(state->ctiled_geometries, &xid, i);
-
+  g_hash_table_insert(state->ctiled_geometries, xidp, i);
 }
 
 /*

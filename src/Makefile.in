@@ -98,7 +98,8 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_ctile_OBJECTS = main.$(OBJEXT) winstate.$(OBJEXT)
+am_ctile_OBJECTS = main.$(OBJEXT) winstate.$(OBJEXT) \
+	wnckhandler.$(OBJEXT) tiling.$(OBJEXT)
 ctile_OBJECTS = $(am_ctile_OBJECTS)
 ctile_LDADD = $(LDADD)
 AM_V_P = $(am__v_P_@AM_V@)
@@ -116,7 +117,8 @@ am__v_at_1 =
 DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
-am__depfiles_remade = ./$(DEPDIR)/main.Po ./$(DEPDIR)/winstate.Po
+am__depfiles_remade = ./$(DEPDIR)/main.Po ./$(DEPDIR)/tiling.Po \
+	./$(DEPDIR)/winstate.Po ./$(DEPDIR)/wnckhandler.Po
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -245,7 +247,7 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-ctile_SOURCES = main.c winstate.c
+ctile_SOURCES = main.c winstate.c wnckhandler.c tiling.c
 # ctile_SOURCES = main.c winstate.c
 AM_CFLAGS = $(MY_PKG_CFLAGS) $(LIBWNCK_CFLAGS)
 AM_LIBS = $(MY_PKG_LIBS)
@@ -337,7 +339,9 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tiling.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/winstate.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/wnckhandler.Po@am__quote@ # am--include-marker
 
 $(am__depfiles_remade):
 	@$(MKDIR_P) $(@D)
@@ -487,7 +491,9 @@ clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
 
 distclean: distclean-am
 		-rm -f ./$(DEPDIR)/main.Po
+	-rm -f ./$(DEPDIR)/tiling.Po
 	-rm -f ./$(DEPDIR)/winstate.Po
+	-rm -f ./$(DEPDIR)/wnckhandler.Po
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-tags
@@ -534,7 +540,9 @@ installcheck-am:
 
 maintainer-clean: maintainer-clean-am
 		-rm -f ./$(DEPDIR)/main.Po
+	-rm -f ./$(DEPDIR)/tiling.Po
 	-rm -f ./$(DEPDIR)/winstate.Po
+	-rm -f ./$(DEPDIR)/wnckhandler.Po
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 

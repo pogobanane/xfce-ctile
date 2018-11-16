@@ -8,6 +8,16 @@ struct Rect Rect_init() {
   ret.heightp = 0;
 }
 
+int print_hash_table_entry(gpointer xid, gpointer value, gpointer user_data) {
+  struct Rect* rect = (struct Rect*)value;
+  g_print("(key: %i, value: %i, %i) ", *((int*)xid), rect->xp, rect->yp);
+  return 0;
+}
+
+dump_hash_table(GHashTable* table) {
+  g_hash_table_foreach(table, print_hash_table_entry, NULL);
+}
+
 struct WinState tiling_init() {
   struct WinState state;
   state.initial_geometries = g_hash_table_new(g_int64_hash, g_int64_equal);
