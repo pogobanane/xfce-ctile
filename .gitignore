@@ -2,6 +2,7 @@ src/ctile
 
 *.a
 *.o
+*.h.gch
 *.pb.cc
 *.pb.h
 .deps
