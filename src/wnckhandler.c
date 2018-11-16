@@ -81,11 +81,11 @@ static void save_ctile_defined_geometry(struct WinState* state, WnckScreen* scre
 takes care of handling wnck and saving window positions done
 by the user instead of ctile
 */
-void do_tiling(struct WinState* win_state) {
+void do_tiling(struct WinState* win_state, void (*tile_somehow)(struct WinState*, WnckScreen*)) {
   WnckScreen* screen = open_wnck();
 
   save_user_defined_geometry(win_state, screen);
-  tile_right(win_state, screen);
+  tile_somehow(win_state, screen);
 
   // check actual window bounds (window might alter our instructions)
   close_wnck();

@@ -105,11 +105,25 @@ static struct Rect compute_usable(WnckScreen* screen) {
       return usable;
 }
 
-void tile_right(struct WinState* state, WnckScreen* screen) {
+void tile_left(struct WinState* state, WnckScreen* screen) {
   WnckWindow* active = wnck_screen_get_active_window(screen);
   struct Rect final_tiled_geometry;
   struct Rect usable = compute_usable(screen);
   final_tiled_geometry.xp = usable.xp;
+  final_tiled_geometry.yp = usable.yp;
+  final_tiled_geometry.widthp = usable.widthp / 2;
+  final_tiled_geometry.heightp = usable.heightp;
+  wnck_window_set_geometry(active, WNCK_WINDOW_GRAVITY_SOUTH,
+    WNCK_WINDOW_CHANGE_EVERYTHING,
+    final_tiled_geometry.xp, final_tiled_geometry.yp,
+    final_tiled_geometry.widthp, final_tiled_geometry.heightp);
+}
+
+void tile_right(struct WinState* state, WnckScreen* screen) {
+  WnckWindow* active = wnck_screen_get_active_window(screen);
+  struct Rect final_tiled_geometry;
+  struct Rect usable = compute_usable(screen);
+  final_tiled_geometry.xp = usable.widthp / 2;
   final_tiled_geometry.yp = usable.yp;
   final_tiled_geometry.widthp = usable.widthp / 2;
   final_tiled_geometry.heightp = usable.heightp;
