@@ -43,7 +43,9 @@ struct XHandle xhandle_init_hotkeys() {
   return handle;
 }
 
-// returns a keycode. Note: XKeysymToKeycode(handle.dpy,XK_Left) with keysyms
+// returns the keycode of the rightmost key in the key combination. Other keys
+// of that combination are somewhere under "modifiers"
+// Note: XKeysymToKeycode(handle.dpy,XK_Left) with keysyms
 // from X11/keysymdef.h.
 unsigned int xhandle_wait_event(struct XHandle handle) {
   while (true) {

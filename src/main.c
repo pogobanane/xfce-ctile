@@ -32,7 +32,19 @@ int main (int argc, char **argv)
 
   while(true) {
     g_print("%s\n", "waiting for strg shift y");
-    xhandle_wait_event(handle);
+    unsigned int keycode = xhandle_wait_event(handle);
+    if (keycode == XKeysymToKeycode(handle.dpy,XK_Left)) {
+      g_print("left\n");
+    } else
+    if (keycode == XKeysymToKeycode(handle.dpy,XK_Up)) {
+      g_print("up\n");
+    } else
+    if (keycode == XKeysymToKeycode(handle.dpy,XK_Right)) {
+      g_print("right\n");
+    } else
+    if (keycode == XKeysymToKeycode(handle.dpy,XK_Down)) {
+      g_print("down\n");
+    }
     //move_active_window(argc, argv);
     do_tiling(&win_state);
   }
