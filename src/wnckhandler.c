@@ -43,9 +43,14 @@ static void save_user_defined_geometry(struct WinState* state, WnckScreen* scree
     // insert geometry
     struct Rect* value = malloc(sizeof(struct Rect));
     memcpy(value, &geometry, sizeof(struct Rect));
-    //u_int64_t* key = malloc(sizeof(u_int64_t));
-    //*key = xid;
-    g_hash_table_insert(state->initial_geometries, &xid, value);
+    u_int64_t* key = malloc(sizeof(u_int64_t));
+    *key = xid;
+    g_hash_table_insert(state->initial_geometries, key, value);
+    // insert empty tiling state
+    struct TilingState* ts = tiling_state_new();
+    key = malloc(sizeof(u_int64_t));
+    *key = xid;
+    g_hash_table_insert(state->tiling_states, key, ts);
   } else {
     struct Rect* ctiled_geometry = (struct Rect*)g_hash_table_lookup(state->ctiled_geometries, &xid);
     if(ctiled_geometry != NULL) {
@@ -57,7 +62,11 @@ static void save_user_defined_geometry(struct WinState* state, WnckScreen* scree
         g_print("Detected new user geometry %i, %i, %i, %i\n", geometry.xp, geometry.yp, geometry.widthp, geometry.heightp);
         struct Rect* value = malloc(sizeof(struct Rect));
         memcpy(value, &geometry, sizeof(struct Rect));
-        g_hash_table_insert(state->initial_geometries, &xid, value);
+        // no need to malloc xid, because xid already exists in table and
+        // therefor won't get replaced
+        u_int64_t* key = malloc(sizeof(u_int64_t));
+        *key = xid;
+        g_hash_table_insert(state->initial_geometries, key, value);
       }
     }
   }

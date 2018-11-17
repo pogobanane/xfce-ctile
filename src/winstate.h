@@ -5,6 +5,7 @@ struct Rect {
 };
 
 /*
+WinState is created and maintained by wnckhandler.
 TODO: GHashTables are never cleaned up because we do
 not recognize when windows are closed.
 Proposal: scrape the list of windows to remove closed ones
@@ -16,6 +17,7 @@ struct WinState {
   rows;
   GHashTable* initial_geometries; // last user defined geometry
   GHashTable* ctiled_geometries; // last geometry applied by ctile
+  GHashTable* tiling_states;
   struct Rect initial_geometry;
   /*
   (x_state, y_state) represents the coordinates in this

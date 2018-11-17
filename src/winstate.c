@@ -1,4 +1,6 @@
-#include "winstate.h"
+#include <stdlib.h>
+
+#include "tiling.h"
 
 struct Rect Rect_init() {
   struct Rect ret;
@@ -8,20 +10,22 @@ struct Rect Rect_init() {
   ret.heightp = 0;
 }
 
+/*
 int print_hash_table_entry(gpointer xid, gpointer value, gpointer user_data) {
   struct Rect* rect = (struct Rect*)value;
   g_print("(key: %i, value: %i, %i) ", *((int*)xid), rect->xp, rect->yp);
   return 0;
 }
 
-dump_hash_table(GHashTable* table) {
+void dump_hash_table(GHashTable* table) {
   g_hash_table_foreach(table, print_hash_table_entry, NULL);
-}
+}*/
 
 struct WinState tiling_init() {
   struct WinState state;
-  state.initial_geometries = g_hash_table_new(g_int64_hash, g_int64_equal);
-  state.ctiled_geometries = g_hash_table_new(g_int64_hash, g_int64_equal);
+  state.initial_geometries = g_hash_table_new_full(g_int64_hash, g_int64_equal, free, free);
+  state.ctiled_geometries = g_hash_table_new_full(g_int64_hash, g_int64_equal, free, free);
+  state.tiling_states = g_hash_table_new_full(g_int64_hash, g_int64_equal, free, tiling_state_destroy);
   state.columns = 3;
   state.rows = 2;
   GHashTable* htable = g_hash_table_new(g_int_hash, g_int_equal);

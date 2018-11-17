@@ -3,9 +3,22 @@
 #include <libwnck/libwnck.h>
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
-#include "winstate.h"
+#include <stdlib.h>
+
+#include "tiling.h"
 
 #define WNCK_WINDOW_CHANGE_EVERYTHING (WNCK_WINDOW_CHANGE_X | WNCK_WINDOW_CHANGE_Y | WNCK_WINDOW_CHANGE_WIDTH | WNCK_WINDOW_CHANGE_HEIGHT)
+
+struct TilingState* tiling_state_new() {
+  struct TilingState* ts = malloc(sizeof(struct TilingState));
+  memset(ts, 0, sizeof(struct TilingState));
+  return ts;
+}
+
+void tiling_state_destroy(void* ptr) {
+  struct TilingState* s = (struct TilingState*) ptr;
+  free(s);
+}
 
 struct Strut {
   int top, bot, left, right;
@@ -131,4 +144,11 @@ void tile_right(struct WinState* state, WnckScreen* screen) {
     WNCK_WINDOW_CHANGE_EVERYTHING,
     final_tiled_geometry.xp, final_tiled_geometry.yp,
     final_tiled_geometry.widthp, final_tiled_geometry.heightp);
+}
+
+void tiling_cycle_dimensions(struct WinState* state, WnckScreen* screen) {
+  WnckWindow* active = wnck_screen_get_active_window(screen);
+  struct Rect final_tiled_geometry;
+  struct Rect usable = compute_usable(screen);
+  int cycle_state = 0;
 }
