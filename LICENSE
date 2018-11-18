@@ -1,0 +1,3 @@
+i guess: GNU Free Documentation License
+because src/farey_sequence.c uses code from https://rosettacode.org/wiki/Farey_sequence#C
+and this code is under that license. 
