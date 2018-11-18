@@ -45,7 +45,7 @@ void farey(int n)
 		printf(" %d/%d", f2.d, f2.n);
 	}
  
-	printf('\n');
+	printf("%c", '\n');
 }
 
 /* https://stackoverflow.com/questions/8194894/finding-the-position-of-a-fraction-in-farey-sequence
