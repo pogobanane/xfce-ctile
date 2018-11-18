@@ -14,3 +14,5 @@ void tiling_state_destroy(void* ptr);
 void tile_right(struct WinState* state, WnckScreen* screen);
 
 void tile_left(struct WinState* state, WnckScreen* screen);
+
+void tiling_right_cycle_width(struct WinState* wstate, WnckScreen* screen);

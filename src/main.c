@@ -39,6 +39,7 @@ int main (int argc, char **argv)
     } else
     if (keycode == XKeysymToKeycode(handle.dpy,XK_Up)) {
       g_print("up\n");
+      do_tiling(&win_state, tiling_right_cycle_width);
     } else
     if (keycode == XKeysymToKeycode(handle.dpy,XK_Right)) {
       g_print("right\n");
