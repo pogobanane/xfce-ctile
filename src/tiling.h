@@ -5,6 +5,7 @@
 // remember to update tiling_state_destroy, if you update this!
 struct TilingState {
   int dimension_cycle; // represents the tiling_cycle_dimensions state
+  signed short int smartx, smarty;
 };
 
 struct TilingState* tiling_state_new();
@@ -15,4 +16,10 @@ void tile_right(struct WinState* state, WnckScreen* screen);
 
 void tile_left(struct WinState* state, WnckScreen* screen);
 
-void tiling_right_cycle_width(struct WinState* wstate, WnckScreen* screen);
+void tiling_smart_left(struct WinState* wstate, WnckScreen* screen);
+
+void tiling_smart_top(struct WinState* wstate, WnckScreen* screen);
+
+void tiling_smart_right(struct WinState* wstate, WnckScreen* screen);
+
+void tiling_smart_bot(struct WinState* wstate, WnckScreen* screen);

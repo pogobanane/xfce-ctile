@@ -14,6 +14,8 @@
 struct TilingState* tiling_state_new() {
   struct TilingState* ts = malloc(sizeof(struct TilingState));
   memset(ts, 0, sizeof(struct TilingState));
+  ts->smartx = 1;
+  ts->smarty = 1;
   return ts;
 }
 
@@ -172,4 +174,55 @@ void tiling_right_cycle_width(struct WinState* wstate, WnckScreen* screen) {
     WNCK_WINDOW_CHANGE_EVERYTHING,
     final_tiled_geometry.xp, final_tiled_geometry.yp,
     final_tiled_geometry.widthp, final_tiled_geometry.heightp);
+}
+
+void tiling_reset(struct WinState* wstate, WnckScreen* screen) {
+}
+
+// returns NULL on error
+static struct TilingState* tiling_get_tstate(struct WinState* wstate, WnckScreen* screen) {
+  // get important values
+  WnckWindow* active = wnck_screen_get_active_window(screen);
+  u_int64_t xid = wnck_window_get_xid(active);
+  struct TilingState* tstate = (struct TilingState*) g_hash_table_lookup(wstate->tiling_states, &xid);
+  return tstate;
+}
+
+static void tiling_smart(struct WinState* wstate, WnckScreen* screen, int deltax, int deltay) {
+  struct TilingState* tstate = tiling_get_tstate(wstate, screen);
+  if(tstate == NULL) {
+    g_print("ERROR: wnckhandler didn't create a tiling state for this window");
+    return;
+  }
+
+  typedef void (*tfunc)(struct WinState*, WnckScreen*);
+  tfunc functions[3][3] = 
+    {{tiling_reset, tiling_reset, tiling_reset},
+    {tile_left, tiling_reset, tiling_right_cycle_width},
+    {tiling_reset, tiling_reset, tiling_reset}};
+
+  int x = tstate->smartx + deltax;
+  int y = tstate->smarty + deltay;
+  if (0 <= x && x < wstate->columns && 0 <= y && y < 3) {
+    tstate->smartx = x;
+    tstate->smarty = y;
+  }
+  functions[tstate->smarty][tstate->smartx](wstate, screen);
+
+}
+
+void tiling_smart_left(struct WinState* wstate, WnckScreen* screen) {
+  tiling_smart(wstate, screen, -1, 0);
+}
+
+void tiling_smart_top(struct WinState* wstate, WnckScreen* screen) {
+  tiling_smart(wstate, screen, 0, -1);
+}
+
+void tiling_smart_right(struct WinState* wstate, WnckScreen* screen) {
+  tiling_smart(wstate, screen, 1, 0);
+}
+
+void tiling_smart_bot(struct WinState* wstate, WnckScreen* screen) {
+  tiling_smart(wstate, screen, 0, 1);
 }
