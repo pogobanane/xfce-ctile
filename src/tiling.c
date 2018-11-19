@@ -150,26 +150,7 @@ void tile_right(struct WinState* state, WnckScreen* screen) {
     final_tiled_geometry.widthp, final_tiled_geometry.heightp);
 }
 
-// 
-struct Rect tiling_height_x_y(struct Rect* usable) {
-
-}
-
-struct Rect tiling_cycle_width(struct Rect usable, 
-  struct WinState* wstate, struct TilingState* tstate) {
-  struct Rect geometry;
-
-  geometry.widthp = usable.widthp * farey_indexed(wstate->columns, tstate->dimension_cycle);
-  geometry.xp = (usable.widthp - geometry.widthp) / 2;
-  geometry.yp = usable.yp;
-  geometry.heightp = usable.heightp;
-
-  tstate->dimension_cycle = (tstate->dimension_cycle + 1) % wstate->columns;
-
-  return geometry;
-}
-
-void tiling_cycling(struct WinState* wstate, WnckScreen* screen) {
+void tiling_right_cycle_width(struct WinState* wstate, WnckScreen* screen) {
   // get important values
   WnckWindow* active = wnck_screen_get_active_window(screen);
   u_int64_t xid = wnck_window_get_xid(active);
@@ -180,14 +161,19 @@ void tiling_cycling(struct WinState* wstate, WnckScreen* screen) {
   }
   struct Rect usable = compute_usable(screen);
   // compute new window geometry
-  struct Rect geometry;
-  geometry = tiling_cycle_width(usable, wstate, tstate);
+  struct Rect final_tiled_geometry;
 
+  final_tiled_geometry.widthp = usable.widthp * farey_indexed(wstate->columns, tstate->dimension_cycle);
+  final_tiled_geometry.xp = (usable.widthp - final_tiled_geometry.widthp) / 2;
+  final_tiled_geometry.yp = usable.yp;
+  final_tiled_geometry.heightp = usable.heightp;
+
+  tstate->dimension_cycle = (tstate->dimension_cycle + 1) % wstate->columns;
   // set geometry
   wnck_window_set_geometry(active, WNCK_WINDOW_GRAVITY_SOUTH,
     WNCK_WINDOW_CHANGE_EVERYTHING,
-    geometry.xp, geometry.yp,
-    geometry.widthp, geometry.heightp);
+    final_tiled_geometry.xp, final_tiled_geometry.yp,
+    final_tiled_geometry.widthp, final_tiled_geometry.heightp);
 }
 
 void tiling_reset(struct WinState* wstate, WnckScreen* screen) {
@@ -212,7 +198,7 @@ static void tiling_smart(struct WinState* wstate, WnckScreen* screen, int deltax
   typedef void (*tfunc)(struct WinState*, WnckScreen*);
   tfunc functions[3][3] = 
     {{tiling_reset, tiling_reset, tiling_reset},
-    {tile_left, tiling_reset, tiling_cycling},
+    {tile_left, tiling_reset, tiling_right_cycle_width},
     {tiling_reset, tiling_reset, tiling_reset}};
 
   int x = tstate->smartx + deltax;
