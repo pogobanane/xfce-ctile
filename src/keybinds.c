@@ -22,7 +22,7 @@ struct XHandle xhandle_init_hotkeys() {
   struct XHandle handle;
   handle.dpy = XOpenDisplay(0);
   handle.root = DefaultRootWindow(handle.dpy);
-  handle.modifiers = ControlMask | ShiftMask;
+  handle.modifiers = Mod4Mask; // win key?
   handle.kc1 = XKeysymToKeycode(handle.dpy,XK_Left);
   handle.kc2 = XKeysymToKeycode(handle.dpy,XK_Up);
   handle.kc3 = XKeysymToKeycode(handle.dpy,XK_Right);
