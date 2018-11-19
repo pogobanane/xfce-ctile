@@ -164,7 +164,33 @@ void tiling_right_cycle_width(struct WinState* wstate, WnckScreen* screen) {
   struct Rect final_tiled_geometry;
 
   final_tiled_geometry.widthp = usable.widthp * farey_indexed(wstate->columns, tstate->dimension_cycle);
-  final_tiled_geometry.xp = (usable.widthp - final_tiled_geometry.widthp) / 2;
+  final_tiled_geometry.xp = usable.widthp - final_tiled_geometry.widthp + usable.xp;
+  final_tiled_geometry.yp = usable.yp;
+  final_tiled_geometry.heightp = usable.heightp;
+
+  tstate->dimension_cycle = (tstate->dimension_cycle + 1) % wstate->columns;
+  // set geometry
+  wnck_window_set_geometry(active, WNCK_WINDOW_GRAVITY_SOUTH,
+    WNCK_WINDOW_CHANGE_EVERYTHING,
+    final_tiled_geometry.xp, final_tiled_geometry.yp,
+    final_tiled_geometry.widthp, final_tiled_geometry.heightp);
+}
+
+void tiling_left_cycle_width(struct WinState* wstate, WnckScreen* screen) {
+  // get important values
+  WnckWindow* active = wnck_screen_get_active_window(screen);
+  u_int64_t xid = wnck_window_get_xid(active);
+  struct TilingState* tstate = (struct TilingState*) g_hash_table_lookup(wstate->tiling_states, &xid);
+  if(tstate == NULL) {
+    g_print("ERROR: wnckhandler didn't create a tiling state for this window");
+    return;
+  }
+  struct Rect usable = compute_usable(screen);
+  // compute new window geometry
+  struct Rect final_tiled_geometry;
+
+  final_tiled_geometry.widthp = usable.widthp * farey_indexed(wstate->columns, tstate->dimension_cycle);
+  final_tiled_geometry.xp = usable.xp;
   final_tiled_geometry.yp = usable.yp;
   final_tiled_geometry.heightp = usable.heightp;
 
@@ -198,7 +224,7 @@ static void tiling_smart(struct WinState* wstate, WnckScreen* screen, int deltax
   typedef void (*tfunc)(struct WinState*, WnckScreen*);
   tfunc functions[3][3] = 
     {{tiling_reset, tiling_reset, tiling_reset},
-    {tile_left, tiling_reset, tiling_right_cycle_width},
+    {tiling_left_cycle_width, tiling_reset, tiling_right_cycle_width},
     {tiling_reset, tiling_reset, tiling_reset}};
 
   int x = tstate->smartx + deltax;
