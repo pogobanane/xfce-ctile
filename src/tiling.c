@@ -203,6 +203,20 @@ void tiling_left_cycle_width(struct WinState* wstate, WnckScreen* screen) {
 }
 
 void tiling_reset(struct WinState* wstate, WnckScreen* screen) {
+  WnckWindow* active = wnck_screen_get_active_window(screen);
+  // get important values
+  u_int64_t xid = wnck_window_get_xid(active);
+  struct Rect* initial = (struct Rect*) g_hash_table_lookup(wstate->initial_geometries, &xid);
+
+  struct Rect final_tiled_geometry;
+  final_tiled_geometry.xp = initial->xp;
+  final_tiled_geometry.yp = initial->yp;
+  final_tiled_geometry.widthp = initial->widthp;
+  final_tiled_geometry.heightp = initial->heightp;
+  wnck_window_set_geometry(active, WNCK_WINDOW_GRAVITY_SOUTH,
+    WNCK_WINDOW_CHANGE_EVERYTHING,
+    final_tiled_geometry.xp, final_tiled_geometry.yp,
+    final_tiled_geometry.widthp, final_tiled_geometry.heightp);
 }
 
 // returns NULL on error
