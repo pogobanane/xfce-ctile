@@ -112,13 +112,16 @@ static struct Rect compute_usable(WnckScreen* screen) {
       Display* display = XOpenDisplay(NULL);
       Window window = RootWindow(display, DefaultScreen(display));
       struct Strut strut = max_strut(display, window);
-      //g_print("%i, %i, %i, %i\n", strut.top, strut.bot, strut.left, strut.right);
+      g_print("strut: %i, %i, %i, %i\n", strut.top, strut.bot, strut.left, strut.right);
       struct Rect usable;
       usable.xp = 0 + strut.left; // screen.left_side + ...
       usable.yp = 0 + strut.top; // screen.top_side + ...
       usable.widthp = wnck_screen_get_width(screen) - strut.left - strut.right;
       usable.heightp = wnck_screen_get_height(screen) - strut.top - strut.bot;
-      //g_print("%i, %i, %i, %i\n", usable.xp, usable.yp, usable.widthp, usable.heightp);
+      g_print("usable: %i, %i, %i, %i\n", usable.xp, usable.yp, usable.widthp, usable.heightp);
+      // tests:
+      g_print("wm name: %s, screencount: %i\n", wnck_screen_get_window_manager_name(screen),
+        wnck_screen_get_number (screen));
       return usable;
 }
 
