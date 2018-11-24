@@ -6,7 +6,7 @@
 #include <stdio.h>
 
 #include "tiling.h"
-#include "wnckhandler.h"
+#include "gdkhandler.h"
 #include "keybinds.c"
 
 #define WNCK_WINDOW_CHANGE_EVERYTHING (WNCK_WINDOW_CHANGE_X | WNCK_WINDOW_CHANGE_Y | WNCK_WINDOW_CHANGE_WIDTH | WNCK_WINDOW_CHANGE_HEIGHT)
