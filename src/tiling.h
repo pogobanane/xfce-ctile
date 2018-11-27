@@ -23,3 +23,5 @@ void tiling_smart_top(struct WinState* wstate, WnckScreen* screen);
 void tiling_smart_right(struct WinState* wstate, WnckScreen* screen);
 
 void tiling_smart_bot(struct WinState* wstate, WnckScreen* screen);
+
+struct Rect compute_usable(WnckScreen* screen);

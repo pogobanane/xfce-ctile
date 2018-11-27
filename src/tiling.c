@@ -108,7 +108,7 @@ static struct Strut max_strut(Display* display, Window window)
 
 /* returns Rect of usable part of screen (which is not used up by taskbars etc.)
 */
-static struct Rect compute_usable(WnckScreen* screen) {
+struct Rect compute_usable(WnckScreen* screen) {
       Display* display = XOpenDisplay(NULL);
       Window window = RootWindow(display, DefaultScreen(display));
       struct Strut strut = max_strut(display, window);

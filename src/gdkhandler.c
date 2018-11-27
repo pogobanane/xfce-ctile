@@ -11,6 +11,9 @@ static WnckScreen* open_wnck() {
   g_print("sasdfadfasdasdadsdasdasdasd\n");
   WnckScreen* screen;
   gboolean succ = gdk_init_check(NULL, NULL); // int argc, char **argv
+  screen = wnck_screen_get_default();
+  wnck_screen_force_update(screen);
+
   if (!succ) {
     g_print("ERROR: could not init gdk");
   }
@@ -19,6 +22,7 @@ static WnckScreen* open_wnck() {
   display1 = gdk_display_manager_list_displays(dm);
   while(1) {
   	if(display1 == NULL) {
+  		compute_usable(screen);
   		exit(0);
   	}
 	GdkDisplay* display = (GdkDisplay*) display1->data;
@@ -31,6 +35,9 @@ static WnckScreen* open_wnck() {
 		GdkRectangle rectangle;
 		gdk_monitor_get_geometry(monitor, &rectangle);
 		g_print("gdk rect: %i, %i, %i, %i\n",rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+		GdkRectangle workspace;
+		gdk_monitor_get_workarea(monitor, &workspace);
+		g_print("gdk strutted rect: %i, %i, %i, %i\n",workspace.x, workspace.y, workspace.width, workspace.height);
 	}
   }
 
