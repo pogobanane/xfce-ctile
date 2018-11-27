@@ -110,9 +110,16 @@ static struct Strut max_strut(Display* display, Window window)
 */
 struct Rect compute_usable(WnckScreen* screen) {
       Display* display = XOpenDisplay(NULL);
-      Window window = RootWindow(display, DefaultScreen(display));
-      struct Strut strut = max_strut(display, window);
-      g_print("strut: %i, %i, %i, %i\n", strut.top, strut.bot, strut.left, strut.right);
+      Window window;
+      struct Strut strut;
+      int i;
+      int n = XScreenCount(display);
+      g_print("XScreenCount: %i\n", n);
+      for(i = 0; i < n; i++) {
+        window = RootWindow(display, i);
+        strut = max_strut(display, window);
+        g_print("display %i strut: %i, %i, %i, %i\n", i, strut.top, strut.bot, strut.left, strut.right);
+      }
       struct Rect usable;
       usable.xp = 0 + strut.left; // screen.left_side + ...
       usable.yp = 0 + strut.top; // screen.top_side + ...
