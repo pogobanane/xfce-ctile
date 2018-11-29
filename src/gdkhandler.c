@@ -14,6 +14,8 @@ static WnckScreen* open_wnck() {
   screen = wnck_screen_get_default();
   wnck_screen_force_update(screen);
 
+  GdkScreen* gdkscreen = gdk_screen_get_default();
+
   if (!succ) {
     g_print("ERROR: could not init gdk");
   }
@@ -23,7 +25,7 @@ static WnckScreen* open_wnck() {
   while(1) {
   	if(display1 == NULL) {
   		compute_usable(screen);
-  		exit(0);
+  		break;
   	}
 	GdkDisplay* display = (GdkDisplay*) display1->data;
 	display1 = display1->next;
@@ -41,6 +43,15 @@ static WnckScreen* open_wnck() {
 	}
   }
 
+  GdkWindow* active = gdk_screen_get_active_window(gdkscreen);
+  struct Rect usable;
+  gdk_window_get_geometry(active, &usable.xp, &usable.yp, 
+  	&usable.widthp, &usable.heightp);
+  u_int64_t xid = gdk_x11_window_get_xid(active);
+  g_print("active window %i: %i, %i, %i, %i\n", xid, usable.xp, usable.yp, usable.widthp, usable.heightp);
+
+
+  		exit(0);
   gdk_display_manager_get_default_display(dm);
   screen = wnck_screen_get_default();
   wnck_screen_force_update(screen);
